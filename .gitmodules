@@ -124,3 +124,6 @@
 [submodule "platform/innovium/sonic-platform-marvell"]
 	path = platform/innovium/sonic-platform-marvell
 	url = https://github.com/Marvell-switching/sonic-platform-marvell
+[submodule "src/sonic-dash-ha"]
+	path = src/sonic-dash-ha
+	url = https://github.com/sonic-net/sonic-dash-ha
