@@ -34,7 +34,7 @@ endif
 $(DOCKER_HA)_CONTAINER_NAME = ha
 $(DOCKER_HA)_RUN_OPT += -t
 $(DOCKER_HA)_RUN_OPT += -v /etc/sonic:/etc/sonic:ro
-$(DOCKER_HA)_RUN_OPT += -v /etc/timezone:/etc/timezone:ro 
+$(DOCKER_HA)_RUN_OPT += -v /etc/timezone:/etc/timezone:ro
 
 SONIC_BOOKWORM_DOCKERS += $(DOCKER_HA)
 SONIC_BOOKWORM_DBG_DOCKERS += $(DOCKER_HA_DBG)
