@@ -1,0 +1,55 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+pr:
+  branches:
+    include:
+      - master
+  paths:
+    exclude:
+      - .github
+
+schedules:
+- cron: "0 8 * * *"
+  displayName: Daily midnight build
+  branches:
+    include:
+    - master
+  always: true
+
+resources:
+  repositories:
+  - repository: buildimage
+    type: github
+    name: sonic-net/sonic-buildimage
+    ref: master
+    endpoint: sonic-net
+
+trigger: none
+
+variables:
+- template: template-variables.yml@buildimage
+- name: CACHE_MODE
+  value: rcache
+- name: ENABLE_FIPS
+  value: y
+
+stages:
+- stage: Build
+  pool: sonicbld-1es
+  variables:
+  - group: Container-Registry
+  - name: CACHE_MODE
+    value: wcache
+  - template: azure-pipelines-repd-build-variables.yml@buildimage
+  jobs:
+  - template: azure-pipelines-build.yml
+    parameters:
+      buildOptions: 'USERNAME=admin SONIC_BUILD_JOBS=$(nproc) ${{ variables.VERSION_CONTROL_OPTIONS }}'
+      jobFilters: none
+      jobGroups:      
+      - name: vpp
+        variables:
+          dbg_image: yes
