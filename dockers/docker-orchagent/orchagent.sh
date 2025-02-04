@@ -51,8 +51,6 @@ fi
 # Add platform specific arguments if necessary
 if [ "$platform" == "broadcom" ]; then
     ORCHAGENT_ARGS+="-m $MAC_ADDRESS"
-elif [ "$platform" == "cavium" ]; then
-    ORCHAGENT_ARGS+="-m $MAC_ADDRESS"
 elif [ "$platform" == "nephos" ]; then
     ORCHAGENT_ARGS+="-m $MAC_ADDRESS"
 elif [ "$platform" == "centec" ]; then
@@ -63,7 +61,7 @@ elif [ "$platform" == "vs" ]; then
     ORCHAGENT_ARGS+="-m $MAC_ADDRESS"
 elif [ "$platform" == "mellanox" ]; then
     ORCHAGENT_ARGS+=""
-elif [ "$platform" == "innovium" ]; then
+elif [ "$platform" == "marvell-teralynx" ]; then
     ORCHAGENT_ARGS+="-m $MAC_ADDRESS"
 elif [ "$platform" == "nvidia-bluefield" ]; then
     ORCHAGENT_ARGS+="-m $MAC_ADDRESS"
@@ -95,6 +93,12 @@ if [[ x"${LOCALHOST_SUBTYPE}" == x"SmartSwitch" ]]; then
     else
         ORCHAGENT_ARGS+=" -q tcp://127.0.0.1:8100"
     fi
+fi
+
+# Add VRF parameter when mgmt-vrf enabled
+MGMT_VRF_ENABLED=`sonic-db-cli CONFIG_DB hget  "MGMT_VRF_CONFIG|vrf_global" "mgmtVrfEnabled"`
+if [[ x"${MGMT_VRF_ENABLED}" == x"true" ]]; then
+    ORCHAGENT_ARGS+=" -v mgmt"
 fi
 
 exec /usr/bin/orchagent ${ORCHAGENT_ARGS}
